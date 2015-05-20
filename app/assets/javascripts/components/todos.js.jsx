@@ -1,4 +1,4 @@
-var Todos = React.createClass({
+var TodoListItem = React.createClass({
   propTypes: {
     title: React.PropTypes.string,
     body: React.PropTypes.string,
@@ -8,9 +8,9 @@ var Todos = React.createClass({
   render: function() {
     return (
       <div>
-        <div>Title: {this.props.title}</div>
-        <div>Body: {this.props.body}</div>
-        <div>Done: {this.props.done}</div>
+        <div>Title: {this.props.todo.title}</div>
+        <div>Body: {this.props.todo.body}</div>
+        <div>Done: {this.props.todo.done.toString()}</div>
       </div>
     );
   }
@@ -24,13 +24,11 @@ var Todolist = React.createClass({
   render: function () {
     return (
       <div>
-        <ul>
-          {
-            this.props.todoList.all().map(function(todo) {
-              return <li>{todo.title}</li>
-            })
-          }
-        </ul>
+        {
+          this.props.todoList.all().map(function(todo) {
+            return <TodoListItem todo={todo}/>
+          })
+        }
       </div>
     );
   }
