@@ -17,20 +17,29 @@ var Todos = React.createClass({
 });
 
 var Todolist = React.createClass({
+  componentDidMount: function() {
+    this.props.todoList.fetch();
+  },
 
   render: function () {
-    this.props.todos.fetch();
     return (
-      <ul>
-        <li>RENDERED</li>
-      </ul>
+      <div>
+        <ul>
+          {
+            this.props.todoList.all().map(function(todo) {
+              return <li>{todo.title}</li>
+            })
+          }
+        </ul>
+      </div>
     );
   }
 });
 // $(document).ready(function(){})
 $(function() {
-  var todosInstance = new Todo( function () { console.log("Initialized"); }  )
-
-  React.render( React.createElement(Todolist, {todos: todosInstance
-  }), document.getElementById('main-content') );
+  var globalRender = function() {
+    React.render( <Todolist todoList={todosInstance} />, document.getElementById('main-content') );
+  }
+  var todosInstance = new Todo( globalRender );
+  globalRender();
 });

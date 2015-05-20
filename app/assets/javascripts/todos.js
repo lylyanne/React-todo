@@ -5,6 +5,10 @@
   }
 
   Todo.prototype = {
+    all: function() {
+      //we slice so we won't accidentally mutate original array
+      return this._todos.slice();
+    },
     findIndex: function(id){
       var index = -1;
       this._todos.forEach(function(todo, idx) {
