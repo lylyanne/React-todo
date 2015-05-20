@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  resources :todos, except: [:new, :edit]
+  resources :todos, defaults: {format: :json}, except: [:new, :edit]
 end

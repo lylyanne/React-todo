@@ -5,3 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Todo.delete_all
+
+Todo.create(title:"Get milk", body:"buy chocolate milk from Walgreens", done: false)
+Todo.create(title:"Get cereal", body:"buy frosted flakes", done: false)
+Todo.create(title:"Buy Paper Towels", body:"Charmin Ultra Soft", done: false)
+Todo.create(title:"Go to class", body:"See our main man Jeff", done: false)
