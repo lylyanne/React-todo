@@ -5,6 +5,16 @@
   }
 
   Todo.prototype = {
+    findIndex: function(id){
+      var index = -1;
+      this._todos.forEach(function(todo, idx) {
+        if (todo.id === id) {
+          index = idx;
+          return;
+        };
+      })
+      return index;
+    },
     fetch: function() {
       var that = this;
       $.getJSON("/api/todos/", function(data) {
@@ -24,25 +34,29 @@
         },
       });
     },
-    destroy: function(obj) {
+    destroy: function(id) {
       var that = this;
       $.ajax({
         type: "DELETE",
-        url: "/api/todos/" + obj.id,
-        data: obj,
+        url: "/api/todos/" + id,
         success: function() {
-            var targetIdx;
+          var targetIdx = that.findIndex(id);
+          that._todos.splice(targetIdx, 1);
+          that.changed();
+        },
+      });
+    },
+    toggleDone: function(id) {
+      var that = this;
+      var todo = this._todos[this.findIndex(id)];
+      todo.done = !todo.done;
 
-            //find client side item
-            that._todos.forEach(function(todo, idx) {
-              if (todo.id === obj.id) {
-                targetIdx = idx;
-                return;
-              };
-            })
-
-            that._todos.splice(targetIdx, 1);
-            that.changed();
+      $.ajax({
+        type: "PATCH",
+        url: "/api/todos/" + id,
+        data: {"todo":todo} ,
+        success: function(obj) {
+          that.changed();
         },
       });
     }
