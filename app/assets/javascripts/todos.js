@@ -8,7 +8,6 @@
     fetch: function() {
       var that = this;
       $.getJSON("/api/todos/", function(data) {
-        debugger
         that._todos = data;
         that.changed();
       });
@@ -32,13 +31,20 @@
         url: "/api/todos/" + obj.id,
         data: obj,
         success: function() {
-            var idx = that._todos.indexOf(obj)
-            that._todos.splice(idx, 1);
+            var targetIdx;
+
+            //find client side item
+            that._todos.forEach(function(todo, idx) {
+              if (todo.id === obj.id) {
+                targetIdx = idx;
+                return;
+              };
+            })
+
+            that._todos.splice(targetIdx, 1);
             that.changed();
         },
       });
     }
   }
 })();
-
-alert('hi')
