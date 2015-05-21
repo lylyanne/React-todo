@@ -5,12 +5,19 @@ var TodoListItem = React.createClass({
     done: React.PropTypes.bool
   },
 
+  deleteTodo: function (event) {
+    event.preventDefault();
+    var id = this.props.todo.id;
+    this.props.todoList.destroy(id);
+  },
+
   render: function() {
     return (
       <div>
         <div>Title: {this.props.todo.title}</div>
         <div>Body: {this.props.todo.body}</div>
         <div>Done: {this.props.todo.done.toString()}</div>
+        <button onClick={this.deleteTodo}>Destroy</button>
       </div>
     );
   }
@@ -58,11 +65,12 @@ var Todolist = React.createClass({
   },
 
   render: function () {
+    var that = this;
     return (
       <div>
         {
           this.props.todoList.all().map(function(todo) {
-            return <TodoListItem todo={todo}/>
+            return <TodoListItem todo={todo} todoList={that.props.todoList} />
           })
         }
         <TodoForm todoList={this.props.todoList}/>
