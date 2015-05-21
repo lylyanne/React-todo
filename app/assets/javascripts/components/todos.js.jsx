@@ -11,15 +11,31 @@ var TodoListItem = React.createClass({
     this.props.todoList.destroy(id);
   },
 
+  toggleTodo: function (event) {
+    event.preventDefault();
+    var id = this.props.todo.id;
+    this.props.todoList.toggleDone(id);
+  },
+
   render: function() {
+    var that = this;
     return (
       <div>
         <div>Title: {this.props.todo.title}</div>
         <div>Body: {this.props.todo.body}</div>
-        <div>Done: {this.props.todo.done.toString()}</div>
         <button onClick={this.deleteTodo}>Destroy</button>
+        <DoneButton  completed={this.props.todo.done} toggleFunction={this.toggleTodo}/>
       </div>
     );
+  }
+});
+
+var DoneButton = React.createClass({
+  render: function () {
+    var buttonText = this.props.completed ? "Undo" : "Done!" ;
+    return (
+      <button onClick={this.props.toggleFunction}>{buttonText}</button>
+    )
   }
 });
 
