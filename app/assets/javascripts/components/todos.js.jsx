@@ -4,29 +4,51 @@ var TodoListItem = React.createClass({
     body: React.PropTypes.string,
     done: React.PropTypes.bool
   },
-
+  getInitialState: function() {
+    return {show: false }
+  },
   deleteTodo: function (event) {
     event.preventDefault();
     var id = this.props.todo.id;
     this.props.todoList.destroy(id);
   },
 
-  toggleTodo: function (event) {
-    event.preventDefault();
-    var id = this.props.todo.id;
-    this.props.todoList.toggleDone(id);
+  showDetail: function() {
+    this.setState({show: true});
   },
 
   render: function() {
     var that = this;
+    var detailView = "";
+
+    if (this.state.show) {
+      detailView = <TodoDetailView toggleTodo={this.props.todo} todo={this.props.todo} todoList={that.props.todoList}/>
+    }
+
     return (
       <div>
-        <div>Title: {this.props.todo.title}</div>
-        <div>Body: {this.props.todo.body}</div>
+        <div className="todo-text" onClick={this.showDetail}>Title: {this.props.todo.title} </div>
         <button onClick={this.deleteTodo}>Destroy</button>
-        <DoneButton  completed={this.props.todo.done} toggleFunction={this.toggleTodo}/>
+        { detailView }
       </div>
     );
+  }
+});
+
+var TodoDetailView = React.createClass({
+    toggleTodo: function (event) {
+      event.preventDefault();
+      var id = this.props.todo.id;
+      this.props.todoList.toggleDone(id);
+    },
+
+  render: function() {
+    return (
+      <div>
+        <div className="todo-text">Body: {this.props.todo.body}</div>
+        <DoneButton completed={this.props.todo.done} toggleFunction={this.toggleTodo}/>
+      </div>
+    )
   }
 });
 
@@ -61,11 +83,11 @@ var TodoForm = React.createClass({
   render: function () {
     return (
       <form onSubmit={this.createNewTodo}>
-        <label>ToDo Title
+        <label>Title
           <input type="text" onChange={this.handleTitleChange} value={this.state.title}/>
         </label>
 
-        <label>ToDo Body
+        <label>Body
           <input type="text" onChange={this.handleBodyChange} value={this.state.body}/>
         </label>
 
@@ -84,23 +106,22 @@ var Todolist = React.createClass({
     var that = this;
     return (
       <div>
+        <TodoForm todoList={this.props.todoList}/>
         {
           this.props.todoList.all().map(function(todo) {
             return <TodoListItem todo={todo} todoList={that.props.todoList} />
           })
         }
-        <TodoForm todoList={this.props.todoList}/>
+
       </div>
     );
   }
 });
 
-
-
 $(function() {
   var globalRender = function() {
     React.render( <Todolist todoList={todosInstance} />, document.getElementById('main-content') );
   }
-  var todosInstance = new Todo( globalRender );
+  var todosInstance = new Todo(globalRender);
   globalRender();
 });
