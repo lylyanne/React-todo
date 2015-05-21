@@ -16,6 +16,42 @@ var TodoListItem = React.createClass({
   }
 });
 
+var TodoForm = React.createClass({
+  getInitialState: function () {
+      return ({title: "", body: ""});
+  },
+
+  handleTitleChange: function(event){
+    this.setState({title: event.target.value})
+  },
+
+  handleBodyChange: function(event){
+    this.setState({body: event.target.value})
+  },
+
+  createNewTodo: function(event){
+    event.preventDefault();
+    var obj = { "todo": { "title" : this.state.title, "body": this.state.body, "done" : false} }
+    this.props.todoList.create(obj);
+  },
+
+  render: function () {
+    return (
+      <form onSubmit={this.createNewTodo}>
+        <label>ToDo Title
+          <input type="text" onChange={this.handleTitleChange} value={this.state.title}/>
+        </label>
+
+        <label>ToDo Body
+          <input type="text" onChange={this.handleBodyChange} value={this.state.body}/>
+        </label>
+
+        <input type="submit" />
+      </form>
+    )
+  }
+});
+
 var Todolist = React.createClass({
   componentDidMount: function() {
     this.props.todoList.fetch();
@@ -29,11 +65,14 @@ var Todolist = React.createClass({
             return <TodoListItem todo={todo}/>
           })
         }
+        <TodoForm todoList={this.props.todoList}/>
       </div>
     );
   }
 });
-// $(document).ready(function(){})
+
+
+
 $(function() {
   var globalRender = function() {
     React.render( <Todolist todoList={todosInstance} />, document.getElementById('main-content') );
